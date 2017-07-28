@@ -1,0 +1,13 @@
+# general
+POMODORO_DURATION=25
+LONG_BREAK_DURATION=15
+SHORT_BREAK_DURATION=5
+LOG_DIR="."
+
+# zenity
+WINDOW_TITLE="Pomodoro"
+WINDOW_HEIGHT=250
+
+# custom script
+CUSTOM_NAME="Custom"
+CUSTOM_SCRIPT="./custom.sh"
