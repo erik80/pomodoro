@@ -18,26 +18,8 @@ function check_if_running
    ps -ef | grep $cmd | grep bash | grep -v $$ | grep -v atom | wc -l
 }
 
-function check_if_small_nonzero_integer
+function kill_other_instances
 {
-   if (($1>0 && $1<60)); then
-		: # ok, argument is timer in minutes
-	else
-      echo "ERROR: value should be between 1-59"
-		exit 1
-	fi
-}
-
-function timer
-{
-   check_if_small_nonzero_integer $1
-	timeout=$((60*$1))
-	while [ $timeout -gt 0 ]
-	do
-		mins=$(($timeout/60))
-		secs=$(($timeout-(60*$mins)))
-		printf "%02d:%02d\n" "$mins" "$secs"
-		sleep 1
-		timeout=$(($timeout-1))
-	done
+   echo "My pid is $$"
+   ps -ef | grep pomodoro.sh | grep -v grep | grep -v atom | grep -v $$
 }

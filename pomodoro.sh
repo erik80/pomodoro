@@ -8,57 +8,70 @@ init_status_files
 check_if_installed zenity
 #check_if_running $0
 
-MENU_NEW_POMODORO="New Pomodoro"
+MENU_POMODORO="New Pomodoro"
 MENU_SHORT_BREAK="Short Break"
 MENU_LONG_BREAK="Long Break"
-MENU_PAUSE_CONTINUE="Pause/Continue"
+MENU_PAUSE="(Un)Pause"
 MENU_CUSTOM_NAME="$CUSTOM_NAME"
 
 
-function start_new_pomodoro
+function do_pomodoro
 {
 	if is_first_pomodoro_today; then
 		set_status_date_today
 		reset_status_counter
 	fi
-	set_state $STATE_NEW_POMODORO
-	timer $POMODORO_DURATION
+	set_state $STATE_POMODORO
+	if [ "$1" == "" ]; then
+		timer $POMODORO_DURATION
+	else
+		timer $1
+	fi
 	increment_status_counter
 }
 
-function start_break
+function do_break
 {
 	check_if_small_nonzero_integer $1
 	set_state $STATE_BREAK
 	timer $1
 }
 
-function start_custom
+function do_custom
 {
 	set_state $STATE_CUSTOM
 	$CUSTOM_SCRIPT
 }
 
-function start_pause_continue
+function do_pause
 {
-	echo "TODO"
+	if is_paused; then
+		# continue in paused pomodoro
+		do_pomodoro $(( $(get_timer_minutes) + 1 ))
+	elif is_pomodoro_running; then
+		# pause pomodoro
+		set_state $STATE_PAUSE
+	else
+		# only pomodoro can be pauses
+		display_info "No running pomodoro"
+	fi
 }
 
 while true
 do
 
-	choice=$(display_menu "$MENU_NEW_POMODORO"       \
+	choice=$(display_menu "$MENU_POMODORO"           \
 								 "$MENU_SHORT_BREAK"        \
 								 "$MENU_LONG_BREAK"         \
-								 "$MENU_PAUSE_CONTINUE"     \
+								 "$MENU_PAUSE"              \
 								 "$MENU_CUSTOM_NAME"        )
 
 	case "$choice" in
-		"$MENU_NEW_POMODORO"   ) start_new_pomodoro ;;
-		"$MENU_SHORT_BREAK"    ) start_break $SHORT_BREAK_DURATION ;;
-		"$MENU_LONG_BREAK"     ) start_break $LONG_BREAK_DURATION ;;
-		"$MENU_PAUSE_CONTINUE" ) start_pause_continue ;;
-		"$MENU_CUSTOM_NAME"    ) start_custom ;;
+		"$MENU_POMODORO"       ) do_pomodoro ;;
+		"$MENU_SHORT_BREAK"    ) do_break $SHORT_BREAK_DURATION ;;
+		"$MENU_LONG_BREAK"     ) do_break $LONG_BREAK_DURATION ;;
+		"$MENU_PAUSE"          ) do_pause ;;
+		"$MENU_CUSTOM_NAME"    ) do_custom ;;
 		*) break ;;
 	esac
 
