@@ -23,3 +23,8 @@ function kill_other_instances
    echo "My pid is $$"
    ps -ef | grep pomodoro.sh | grep -v grep | grep -v atom | grep -v $$
 }
+
+function horn
+{
+   paplay "sounds/$HORN"
+}

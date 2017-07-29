@@ -6,7 +6,7 @@ source lib/functions_other.sh
 
 init_status_files
 check_if_installed zenity
-#check_if_running $0
+
 
 MENU_POMODORO="New Pomodoro"
 MENU_SHORT_BREAK="Short Break"
@@ -28,6 +28,7 @@ function do_pomodoro
 		timer $1
 	fi
 	increment_status_counter
+
 }
 
 function do_break
@@ -35,6 +36,7 @@ function do_break
 	check_if_small_nonzero_integer $1
 	set_state $STATE_BREAK
 	timer $1
+	horn
 }
 
 function do_custom
