@@ -63,15 +63,46 @@ function do_pause
 	fi
 }
 
+function is_selected_menu_item
+{
+	local state=$(get_state)
+	local count=$(get_status_counter)
+	local radio="FALSE"
+	case "$state" in
+		"$STATE_POMODORO")
+			if (( $count % 4 == 0)); then
+				if [ "$1" == "$MENU_LONG_BREAK" ]; then
+					radio=TRUE
+				fi
+			else
+				if [ "$1" == "$MENU_SHORT_BREAK" ]; then
+					radio=TRUE
+				fi
+			fi
+		;;
+		"$STATE_PAUSE")
+			if [ "$1" == "$MENU_PAUSE" ]; then
+				radio="TRUE"
+			fi
+		;;
+		*)
+			if [ "$1" == "$MENU_POMODORO" ]; then
+				radio="TRUE"
+			fi
+		;;
+	esac
+	echo "$radio"
+}
+
 while true
 do
 
-	choice=$(display_list "Menu"                     \
- 								 "$MENU_POMODORO"           \
-								 "$MENU_SHORT_BREAK"        \
-								 "$MENU_LONG_BREAK"         \
-								 "$MENU_PAUSE"              \
-								 "$MENU_CUSTOM_NAME"        )
+	choice=$(display_radiolist "Menu" \
+ 					$(is_selected_menu_item "$MENU_POMODORO")    "$MENU_POMODORO"   \
+					$(is_selected_menu_item "$MENU_SHORT_BREAK") "$MENU_SHORT_BREAK"\
+					$(is_selected_menu_item "$MENU_LONG_BREAK")  "$MENU_LONG_BREAK" \
+					$(is_selected_menu_item "$MENU_PAUSE")       "$MENU_PAUSE"      \
+					$(is_selected_menu_item "$MENU_CUSTOM_NAME") "$MENU_CUSTOM_NAME")
 
 	case "$choice" in
 		"$MENU_POMODORO"       ) do_pomodoro ;;

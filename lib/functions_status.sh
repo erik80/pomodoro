@@ -56,6 +56,11 @@ function reset_status_counter
 	echo 0 > $STATUS_COUNTER_FILE
 }
 
+function get_status_counter
+{
+	echo $(<$STATUS_COUNTER_FILE)
+}
+
 function set_state
 {
 	if [ "$1" = "$STATE_POMODORO" -o       \
