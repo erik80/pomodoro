@@ -22,20 +22,20 @@ function init_status_files
 
 function is_first_pomodoro_today
 {
-	system_date=$(date +'%Y%m%d')
-	status_date=$(<$STATUS_DATE_FILE)
+	local system_date=$(date +'%Y%m%d')
+	local status_date=$(<$STATUS_DATE_FILE)
 	test -n "$status_date" -a "$system_date" != "$status_date"
 }
 
 function is_paused
 {
-	state=$(<$STATUS_STATE_FILE)
+	local state=$(<$STATUS_STATE_FILE)
 	test -n "$state" -a "$state" == $STATE_PAUSE
 }
 
 function is_pomodoro_running
 {
-	state=$(<$STATUS_STATE_FILE)
+	local state=$(<$STATUS_STATE_FILE)
 	test -n "$state" -a "$state" == $STATE_POMODORO
 }
 
@@ -46,8 +46,8 @@ function set_status_date_today
 
 function increment_status_counter
 {
-	cnt=$(<$STATUS_COUNTER_FILE)
-	cnt=$(( cnt + 1 ))
+	local cnt=$(<$STATUS_COUNTER_FILE)
+	local cnt=$(( cnt + 1 ))
 	echo $cnt > $STATUS_COUNTER_FILE
 }
 
@@ -87,14 +87,14 @@ function check_if_small_nonzero_integer
 function timer
 {
    check_if_small_nonzero_integer $1
-	timeout=$((60*$1))
+	local timeout=$((60*$1))
 	while [ $timeout -gt 0 ]
 	do
-		mins=$(($timeout/60))
-		secs=$(($timeout-(60*$mins)))
+		local mins=$(($timeout/60))
+		local secs=$(($timeout-(60*$mins)))
 		printf "%02d:%02d\n" "$mins" "$secs" > $STATUS_TIMER_FILE
 		sleep 1
-		timeout=$(($timeout-1))
+		local timeout=$(($timeout-1))
 		if is_paused; then
 			exit 0
 		fi

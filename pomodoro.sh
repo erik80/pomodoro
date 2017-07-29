@@ -17,6 +17,10 @@ MENU_CUSTOM_NAME="$CUSTOM_NAME"
 
 function do_pomodoro
 {
+	local project=$(display_list "Select Project" ${PROJECTS[@]})
+	local task=$(display_entry "Enter task" "")
+	log "${project}: ${task}"
+
 	if is_first_pomodoro_today; then
 		set_status_date_today
 		reset_status_counter
@@ -62,7 +66,8 @@ function do_pause
 while true
 do
 
-	choice=$(display_menu "$MENU_POMODORO"           \
+	choice=$(display_list "Menu"                     \
+ 								 "$MENU_POMODORO"           \
 								 "$MENU_SHORT_BREAK"        \
 								 "$MENU_LONG_BREAK"         \
 								 "$MENU_PAUSE"              \

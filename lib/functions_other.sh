@@ -1,8 +1,8 @@
 #!/bin/bash
 function check_if_installed
 {
-   cmd=$1
-   is_installed=$(type -t $cmd | wc -l)
+   local cmd=$1
+   local is_installed=$(type -t $cmd | wc -l)
    if (( $is_installed )); then
       : # it is ok, do nothing
    else
@@ -14,7 +14,7 @@ function check_if_installed
 
 function check_if_running
 {
-   cmd=${1##*/}
+   local cmd=${1##*/}
    ps -ef | grep $cmd | grep bash | grep -v $$ | grep -v atom | wc -l
 }
 
@@ -27,4 +27,21 @@ function kill_other_instances
 function horn
 {
    paplay "sounds/$HORN"
+}
+
+function implode
+{
+   local IFS="$1"
+   shift
+   echo "$*"
+}
+
+function log
+{
+   local current_date="$(date +'%Y%m%d')"
+   local current_time="$(date +'%H:%M')"
+   local logfile="${LOG_DIR}/${current_date}.log"
+   mkdir -p ${LOG_DIR}
+   touch $logfile
+   printf "%s\t%s\n" "$current_time" "$1" >> $logfile
 }
