@@ -1,7 +1,7 @@
 # general
-POMODORO_DURATION=1
-LONG_BREAK_DURATION=1
-SHORT_BREAK_DURATION=1
+POMODORO_DURATION=25
+LONG_BREAK_DURATION=15
+SHORT_BREAK_DURATION=5
 LOG_DIR="."
 HORN="Train Whistle-SoundBible.com-458982136.wav"
 PROJECTS=("Admin_Tasks" "Algeria_CGN" "Algeria_DGSN" "Algeria_MICL" "Belgium_FedPol" "Conference" "Egypt" "Eurodac" "Israel" "Kosovo" "Lithuania" "Morocco" "Other" "Slovakia" "Spain" "Travel")

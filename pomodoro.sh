@@ -17,10 +17,6 @@ MENU_CUSTOM_NAME="$CUSTOM_NAME"
 
 function do_pomodoro
 {
-	local project=$(display_list "Select Project" ${PROJECTS[@]})
-	local task=$(display_entry "Enter task" "")
-	log "${project}: ${task}"
-
 	if is_first_pomodoro_today; then
 		set_status_date_today
 		reset_status_counter
@@ -32,6 +28,10 @@ function do_pomodoro
 		timer $1
 	fi
 	increment_status_counter
+
+	local project=$(display_list "Select Project" "${PROJECTS[@]}")
+	local task=$(display_entry "Enter task" "$(get_last_task)")
+	log "${project}: ${task}"
 
 }
 

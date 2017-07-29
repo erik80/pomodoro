@@ -36,12 +36,22 @@ function implode
    echo "$*"
 }
 
-function log
+function get_logfilename
 {
    local current_date="$(date +'%Y%m%d')"
-   local current_time="$(date +'%H:%M')"
    local logfile="${LOG_DIR}/${current_date}.log"
    mkdir -p ${LOG_DIR}
    touch $logfile
-   printf "%s\t%s\n" "$current_time" "$1" >> $logfile
+   echo $logfile
+}
+
+function log
+{
+   local current_time="$(date +'%H:%M')"
+   printf "%s\t%s\n" "$current_time" "$1" >> $(get_logfilename)
+}
+
+function get_last_task
+{
+   tail -1 $(get_logfilename) | sed -e 's/.*:[ \t]*//'
 }
