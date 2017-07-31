@@ -1,4 +1,11 @@
 #!/bin/bash
+if [ ! -f $(pwd)"/config" ]; then
+	echo "ERROR: working directory is set to: $(pwd)"
+	zenity --error --text="ERROR: working directory is set to: $(pwd)"
+	exit
+fi
+
+
 source ./config
 source lib/functions_display.sh
 source lib/functions_status.sh
@@ -6,7 +13,6 @@ source lib/functions_other.sh
 
 init_status_files
 check_if_installed zenity
-
 
 MENU_POMODORO="New Pomodoro"
 MENU_SHORT_BREAK="Short Break"

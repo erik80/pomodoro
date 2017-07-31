@@ -18,9 +18,6 @@ function display_list
 function display_radiolist
 {
    local window_height=$(( 100 + ($# * 12) ))
-   #local col_name="$1"
-   #shift;
-   #echo "$*"
 	zenity --list --radiolist --height=$window_height --title="$TITLE" --column "" --column "$@"
 }
 
