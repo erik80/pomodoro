@@ -12,28 +12,9 @@ function check_if_installed
    fi
 }
 
-function check_if_running
-{
-   local cmd=${1##*/}
-   ps -ef | grep $cmd | grep bash | grep -v $$ | grep -v atom | wc -l
-}
-
-function kill_other_instances
-{
-   echo "My pid is $$"
-   ps -ef | grep pomodoro.sh | grep -v grep | grep -v atom | grep -v $$
-}
-
 function horn
 {
    paplay "sounds/$HORN"
-}
-
-function implode
-{
-   local IFS="$1"
-   shift
-   echo "$*"
 }
 
 function get_logfilename

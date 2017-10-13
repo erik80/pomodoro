@@ -33,7 +33,7 @@ function is_paused
 	test -n "$state" -a "$state" == $STATE_PAUSE
 }
 
-function is_pomodoro_running
+function is_pomodoro_state
 {
 	local state=$(<$STATUS_STATE_FILE)
 	test -n "$state" -a "$state" == $STATE_POMODORO
@@ -108,5 +108,5 @@ function timer
 
 function get_timer_minutes
 {
-	echo $(sed -e 's/:.*//' $STATUS_TIMER_FILE)
+	echo $(sed -e 's/:.*//' -e 's/^0*//' $STATUS_TIMER_FILE)
 }

@@ -37,7 +37,8 @@ function do_pomodoro
 
 	local project=$(display_list "Select Project" "${PROJECTS[@]}")
 	local task=$(display_entry "Enter task" "$(get_last_task)")
-	log "${project}: ${task}"
+	local counter=$(get_status_counter)
+	log "${counter}: ${project}: ${task}"
 
 }
 
@@ -60,7 +61,7 @@ function do_pause
 	if is_paused; then
 		# continue in paused pomodoro
 		do_pomodoro $(( $(get_timer_minutes) + 1 ))
-	elif is_pomodoro_running; then
+	elif is_pomodoro_state; then
 		# pause pomodoro
 		set_state $STATE_PAUSE
 	else
@@ -69,34 +70,40 @@ function do_pause
 	fi
 }
 
-function is_selected_menu_item
+function set_true_if
+{
+	if [ "$1" == "$2" ];then
+		echo "TRUE"
+	else
+		echo "FALSE"
+	fi
+}
+
+function set_default_menu_item
 {
 	local state=$(get_state)
 	local count=$(get_status_counter)
 	local radio="FALSE"
-	case "$state" in
-		"$STATE_POMODORO")
-			if (( $count % 4 == 0)); then
-				if [ "$1" == "$MENU_LONG_BREAK" ]; then
-					radio=TRUE
+	if is_first_pomodoro_today; then
+		radio=$(set_true_if "$MENU_POMODORO" "$1")
+	else
+		case "$state" in
+			"$STATE_POMODORO")
+				if (( $count % 4 == 0)); then
+					radio=$(set_true_if "$MENU_LONG_BREAK" "$1")
+				else
+					radio=$(set_true_if "$MENU_SHORT_BREAK" "$1")
 				fi
-			else
-				if [ "$1" == "$MENU_SHORT_BREAK" ]; then
-					radio=TRUE
-				fi
-			fi
-		;;
-		"$STATE_PAUSE")
-			if [ "$1" == "$MENU_PAUSE" ]; then
-				radio="TRUE"
-			fi
-		;;
-		*)
-			if [ "$1" == "$MENU_POMODORO" ]; then
-				radio="TRUE"
-			fi
-		;;
-	esac
+			;;
+			"$STATE_PAUSE")
+				radio=$(set_true_if "$MENU_PAUSE" "$1")
+			;;
+			*)
+				radio=$(set_true_if "$MENU_POMODORO" "$1")
+			;;
+		esac
+	fi
+
 	echo "$radio"
 }
 
@@ -104,11 +111,11 @@ while true
 do
 
 	choice=$(display_radiolist "Menu" \
- 					$(is_selected_menu_item "$MENU_POMODORO")    "$MENU_POMODORO"   \
-					$(is_selected_menu_item "$MENU_SHORT_BREAK") "$MENU_SHORT_BREAK"\
-					$(is_selected_menu_item "$MENU_LONG_BREAK")  "$MENU_LONG_BREAK" \
-					$(is_selected_menu_item "$MENU_PAUSE")       "$MENU_PAUSE"      \
-					$(is_selected_menu_item "$MENU_CUSTOM_NAME") "$MENU_CUSTOM_NAME")
+ 					$(set_default_menu_item "$MENU_POMODORO")    "$MENU_POMODORO"   \
+					$(set_default_menu_item "$MENU_SHORT_BREAK") "$MENU_SHORT_BREAK"\
+					$(set_default_menu_item "$MENU_LONG_BREAK")  "$MENU_LONG_BREAK" \
+					$(set_default_menu_item "$MENU_PAUSE")       "$MENU_PAUSE"      \
+					$(set_default_menu_item "$MENU_CUSTOM_NAME") "$MENU_CUSTOM_NAME")
 
 	case "$choice" in
 		"$MENU_POMODORO"       ) do_pomodoro ;;

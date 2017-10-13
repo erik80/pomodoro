@@ -8,5 +8,5 @@ PROJECTS=("Admin_Tasks" "Algeria_CGN" "Algeria_DGSN" "Algeria_MICL" "Belgium_Fed
 
 
 # custom script
-CUSTOM_NAME="Custom"
-CUSTOM_SCRIPT="./custom.sh"
+CUSTOM_NAME="Backup"
+CUSTOM_SCRIPT="./custom/backup.sh"
